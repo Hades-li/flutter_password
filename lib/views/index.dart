@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../route/index.dart';
 import 'package:fluro/fluro.dart';
+import '../model/psData.dart';
+import '../store/index.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -13,8 +15,12 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
+
   @override
   Widget build(BuildContext context) {
+    // 获取全局数据
+    PsData data = GState.of(context).data;
+
     // TODO: implement build
     _sliverAppBar() => SliverAppBar(
           expandedHeight: 160.0,
