@@ -21,9 +21,9 @@ Map<String, dynamic> _$PsItemToJson(PsItem instance) => <String, dynamic>{
 
 PsData _$PsDataFromJson(Map<String, dynamic> json) {
   return PsData(
-      json['account'] as String,
-      json['id'] as String,
-      (json['list'] as List)
+      account: json['account'] as String,
+      id: json['id'] as String,
+      list: (json['list'] as List)
           .map((e) => PsItem.fromJson(e as Map<String, dynamic>))
           .toList());
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import '../route/index.dart';
 import 'package:fluro/fluro.dart';
 import '../model/psData.dart';
@@ -15,96 +16,110 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    print('首页进入');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // 获取全局数据
-    PsData data = GState.of(context).data;
-
     // TODO: implement build
-    _sliverAppBar() => SliverAppBar(
-          expandedHeight: 160.0,
-          pinned: true,
-          title: Container(
-            margin: EdgeInsets.all(10.0),
-            padding: EdgeInsets.only(
-              top: 10.0,
-              bottom: 10.0,
-              left: 18.0,
-              right: 18.0,
-            ),
+    _sliverAppBar() => ScopedModelDescendant<GState>(
+      builder: (context, child, model) => SliverAppBar(
+        expandedHeight: 160.0,
+        pinned: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_circle),
+            onPressed: () {
+              Application.router.navigateTo(context, '/detail/?type=new',
+                  transition: TransitionType.inFromRight);
+            },
+          ),
+        ],
+        title: Container(
+          margin: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(
+            top: 10.0,
+            bottom: 10.0,
+            left: 18.0,
+            right: 18.0,
+          ),
 //            height: 30.0,
-            decoration: BoxDecoration(
+          decoration: BoxDecoration(
 //          color: Colors.blue,
-              borderRadius: BorderRadius.circular(18.0),
-              border: Border.all(
-                color: Colors.white,
-                width: 0.5,
-                style: BorderStyle.solid,
-              ),
+            borderRadius: BorderRadius.circular(18.0),
+            border: Border.all(
+              color: Colors.white,
+              width: 0.5,
+              style: BorderStyle.solid,
             ),
-            child: TextField(
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Searching',
-                hintStyle: TextStyle(color: Colors.cyan),
-                contentPadding: EdgeInsets.zero,
+          ),
+          child: TextField(
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Searching',
+              hintStyle: TextStyle(color: Colors.cyan),
+              contentPadding: EdgeInsets.zero,
+            ),
+          ),
+        ),
+        flexibleSpace: SafeArea(
+          child: FlexibleSpaceBar(
+            background: Container(
+              padding: EdgeInsets.fromLTRB(30.0, 65.0, 20.0, 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '总数',
+                    style: TextStyle(color: Colors.white, fontSize: 14.0),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: model.data.list.length.toString().padLeft(2, '0'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32.0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '    个',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(fontSize: 16.0),
+                      children: [
+                        TextSpan(text: '重要的'),
+                        TextSpan(text: 'XX个'),
+                        TextSpan(text: '，普通的'),
+                        TextSpan(text: 'XX个'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          flexibleSpace: SafeArea(
-            child: FlexibleSpaceBar(
-              background: Container(
-                padding: EdgeInsets.fromLTRB(30.0, 65.0, 20.0, 0.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '总数',
-                      style: TextStyle(color: Colors.white, fontSize: 14.0),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'XX',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '    个',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        style: TextStyle(fontSize: 16.0),
-                        children: [
-                          TextSpan(text: '重要的'),
-                          TextSpan(text: 'XX个'),
-                          TextSpan(text: '，普通的'),
-                          TextSpan(text: 'XX个'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
+        ),
+      ),
+    );
 
     // 密码列表item
-    _psItem(int index) => GestureDetector(
+    _psItem(int index,PsItem item) => GestureDetector(
       onTap: () {
         Application.router.navigateTo(context, '/detail/$index',
            transition: TransitionType.inFromRight);
@@ -133,14 +148,14 @@ class HomeState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '密码标题',
+                        item.title,
                         style: TextStyle(
                           fontSize: 20.0,
                           color: Color(0xff303030),
                         ),
                       ),
                       Text(
-                        '密码的具体内容，不过会用在开头或者结尾加***星号的方式给隔离',
+                        item.password,
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Color(0xffb6b6b6),
@@ -167,16 +182,20 @@ class HomeState extends State<Home> {
 
 
     // 密码列表
-    _psList() => Container(
-          color: Color(0xfff9f9f9),
-          child: ListView.builder(
-            padding: EdgeInsets.only(top:20.0,bottom: 20.0,),
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return _psItem(index);
-            },
-          ),
-        );
+    _psList() => new ScopedModelDescendant<GState>(
+      builder: (context, child, model) => Container(
+        color: Color(0xfff9f9f9),
+        child: ListView.builder(
+          padding: EdgeInsets.only(top:20.0,bottom: 20.0,),
+          itemCount: model.data.list.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _psItem(index, model.data.list[index]);
+          },
+        ),
+      ),
+    );
+
+
 
     return Scaffold(
       body: NestedScrollView(

@@ -18,7 +18,7 @@ class PsData {
 	String account;
 	String id;
 	List<PsItem> list;
-	PsData(this.account,this.id,this.list);
+	PsData({this.account,this.id,this.list});
 	factory PsData.fromJson(Map<String, dynamic> json) => _$PsDataFromJson(json);
 	Map<String, dynamic> toJson() => _$PsDataToJson(this);
 }
