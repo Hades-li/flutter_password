@@ -6,10 +6,11 @@ import '../route/index.dart';
 
 
 class Detail extends StatefulWidget {
-  Detail({Key key, this.title, this.isNew = false}) : super(key: key);
+  Detail({Key key, this.title, this.index, this.isNew = false}): super(key: key);
 
   final String title;
   final bool isNew; // 用于标记是否为新建
+  final int index;
 
   @override
   DetailState createState() => new DetailState();
@@ -19,7 +20,7 @@ class DetailState extends State<Detail> {
   bool canShow = false;
   bool isEditor = false;
   Uuid uuid = new Uuid();
-  PsItem data;
+  PsItem item;
   GState state;
 
   TextEditingController _textController;
@@ -28,17 +29,22 @@ class DetailState extends State<Detail> {
   // 保存
   void save(BuildContext context) {
     if (widget.isNew) { // 新建
-      state?.addPsItem(data);
-      print(state.data.list);
-      Application.router.pop(context);
-
+      state?.addPsItem(item);
+//      print(state.data.list);
       state?.savePsData()?.then((file) {
         print('保存成功：${file.path}');
+        Application.router.pop(context);
       })?.catchError((error){
         print('保存失败：$error');
       });
     } else { // 编辑
-
+      state?.modifyPsItem(index: widget.index, item: item);
+      state?.savePsData()?.then((file) {
+        print('保存成功：${file.path}');
+        Application.router.pop(context);
+      })?.catchError((error){
+        print('保存失败：$error');
+      });
     }
   }
   // 设置编辑模式
@@ -55,22 +61,28 @@ class DetailState extends State<Detail> {
   @override
   void initState() {
     // TODO: implement initState
+    state = GState.of(context);
+
     print('详情页');
     isEditor = widget.isNew; // 初始化是否可编辑
-    if (widget.isNew) {
-      data = new PsItem(id: uuid.v1(),title: '',password: '');
+    if (widget.isNew) {// 如果是新建，就创建一个新的临时变量
+      item = new PsItem(id: uuid.v1(),title: '',password: '');
     }
-    else {
-      data = new PsItem(id: '0',title: '第一个密码',password:'123456789');
+    else {// 如果是编辑，就通过copy创建也给临时变量
+      int index = widget.index;
+      String id = state.data.list[index].id;
+      String title = state.data.list[index].title;
+      String password = state.data.list[index].password;
+      item = new PsItem(id: id,title: title, password: password);
     }
-    _textController = new TextEditingController(text: data.password);
-    _titleController = new TextEditingController(text: data.title);
+    _textController = new TextEditingController(text: item.password);
+    _titleController = new TextEditingController(text: item.title);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    state = GState.of(context);
+//    state = GState.of(context);
 
     // TODO: implement build
     return Scaffold(
@@ -92,7 +104,7 @@ class DetailState extends State<Detail> {
             contentPadding: EdgeInsets.only(bottom: 5.0),
           ),
           onChanged: (String val) {
-            data.title = val;
+            item.title = val;
           },
         ),
         centerTitle: true,
@@ -138,7 +150,7 @@ class DetailState extends State<Detail> {
                         contentPadding: EdgeInsets.all(10.0),
                       ),
                       onChanged: (String val) {
-                        data.password = val;
+                        item.password = val;
                       },
                     ),
                   ),

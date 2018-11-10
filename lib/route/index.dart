@@ -9,7 +9,7 @@ class Application {
 
 class Routes {
   static String home = '/';
-  static String detail = '/detail/:id';
+  static String detail = '/detail/:index';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -20,7 +20,12 @@ class Routes {
     router.define(detail, handler: new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       String type = params['type']?.first;
-      return new Detail(title: '详情页', isNew: type == 'new');
+      int index = int.tryParse(params['index']?.first);
+      if (index == null) {
+        index = -1;
+        print(index);
+      }
+      return new Detail(title: '详情页',index: index, isNew: type == 'new');
     }));
     // 首页调用
     router.define(home, handler: new Handler(
