@@ -5,6 +5,16 @@ import 'package:fluro/fluro.dart';
 import '../model/psData.dart';
 import '../store/index.dart';
 
+enum DialogAction {
+  del,
+  editor,
+}
+
+class PopVal {
+  static DialogAction dialogAction;
+  static int index = 0;
+}
+
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
   final String title;
@@ -16,6 +26,19 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   String keyStr = '';
 
+  int get starCount {
+    PsData data = GState
+        .of(context)
+        .data;
+    int count = 0;
+    data.list.forEach((item) {
+      if (item.status == 1) {
+        count += 1;
+      }
+    });
+    return count;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,11 +47,11 @@ class HomeState extends State<Home> {
     super.initState();
   }
 
-//  过滤查询
+//  查询判断
   bool filter(PsItem item) {
     if (item.title.contains(keyStr)) {
       return true;
-    } else if(keyStr == null || keyStr.isEmpty) {
+    } else if (keyStr == null || keyStr.isEmpty) {
       return true;
     } else {
       return false;
@@ -48,12 +71,27 @@ class HomeState extends State<Home> {
     return '$frontStr********';
   }
 
+//  弹窗
+  void showModifyDialog<T>({BuildContext context, Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then<void>((T value) {
+      // The value passed to Navigator.pop() or null.
+      if (value != null) {
+
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // 获取全局数据
     // TODO: implement build
-    _sliverAppBar() => ScopedModelDescendant<GState>(
-          builder: (context, child, model) => SliverAppBar(
+    _sliverAppBar() =>
+        ScopedModelDescendant<GState>(
+          builder: (context, child, model) =>
+              SliverAppBar(
                 expandedHeight: 105.0,
                 pinned: false,
                 flexibleSpace: SafeArea(
@@ -66,7 +104,7 @@ class HomeState extends State<Home> {
                           Text(
                             '总数',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 14.0),
+                            TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                           RichText(
                             text: TextSpan(
@@ -91,12 +129,14 @@ class HomeState extends State<Home> {
                           ),
                           RichText(
                             text: TextSpan(
-                              style: TextStyle(fontSize: 16.0),
+                              style: TextStyle(fontSize: 14.0),
                               children: [
                                 TextSpan(text: '重要的'),
-                                TextSpan(text: 'XX个'),
+                                TextSpan(text: '$starCount个'),
                                 TextSpan(text: '，普通的'),
-                                TextSpan(text: 'XX个'),
+                                TextSpan(
+                                  text: '${model.data.list.length - starCount}个',
+                                ),
                               ],
                             ),
                           ),
@@ -109,73 +149,134 @@ class HomeState extends State<Home> {
         );
 
     // 密码列表item
-    _psItem(int index, PsItem item) => GestureDetector(
-          onTap: () {
-            Application.router.navigateTo(context, '/detail/$index',
-                transition: TransitionType.inFromRight);
-          },
-          child: Card(
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Colors.blue,
-                    width: 5.0,
-                  ),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    _psItem(int index, PsItem item) =>
+        ScopedModelDescendant<GState>(
+          builder: (context, child, model) =>
+              GestureDetector(
+                onTap: () {
+                  Application.router.navigateTo(context, '/detail/$index',
+                      transition: TransitionType.inFromRight);
+                },
+                onLongPress: () {
+//                  print('长安');
+                  showModifyDialog<DialogAction>(
+                    context: context,
+                    child: SimpleDialog(
+                      children: <Widget>[
+                        SimpleDialogOption(
+                          onPressed: () {
+                            model.delPsItem(index:index);
+                            model.savePsData();
+                            Navigator.pop(context, DialogAction.del);
+                          },
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              new Icon(Icons.delete, size: 36.0, color: Colors.red),
+                              new Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: new Text('删除', style: TextStyle(color: Colors.red)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Application.router.navigateTo(context, '/detail/$index',
+                                transition: TransitionType.inFromRight);
+                          },
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              new Icon(Icons.edit, size: 36.0, color: Colors.blue),
+                              new Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: new Text('编辑', style: TextStyle(color: Colors.blue),),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: Card(
+                  clipBehavior: Clip.hardEdge,
+                  margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: item.status == 0 ? Colors.blue : Colors.orange,
+                          width: 5.0,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            item.title,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Color(0xff303030),
+                          Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  item.title,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Color(0xff303030),
+                                  ),
+                                ),
+                                Text(
+                                  obscurePassword(item.password),
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Color(0xffb6b6b6),
+                                  ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            obscurePassword(item.password),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Color(0xffb6b6b6),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.star,
+                                color: item.status == 0
+                                    ? Color(0xffdbdbdb)
+                                    : Colors.orange,
+                              ),
+                              onPressed: () {
+                                model.starItem(
+                                    index: index,
+                                    status: item.status == 0 ? 1 : 0);
+                                model.savePsData().then((_) {});
+                              },
                             ),
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.star,
-                          color: Color(0xffdbdbdb),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
         );
 
     // 密码列表
-    _psList() => new ScopedModelDescendant<GState>(
-          builder: (context, child, model) => Container(
+    _psList() =>
+        new ScopedModelDescendant<GState>(
+          builder: (context, child, model) =>
+              Container(
                 padding: EdgeInsets.only(top: 10.0),
                 color: Color(0xfff9f9f9),
                 child: ListView.builder(
@@ -186,7 +287,9 @@ class HomeState extends State<Home> {
                     if (filter(item)) {
                       return _psItem(index, item);
                     } else {
-                      return Offstage(offstage: true,);
+                      return Offstage(
+                        offstage: true,
+                      );
                     }
                   },
                 ),
@@ -227,6 +330,7 @@ class HomeState extends State<Home> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add_circle),
+            iconSize: 35.0,
             onPressed: () {
               Application.router.navigateTo(
                 context,

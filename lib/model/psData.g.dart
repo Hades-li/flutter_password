@@ -10,13 +10,15 @@ PsItem _$PsItemFromJson(Map<String, dynamic> json) {
   return PsItem(
       id: json['id'] as String,
       title: json['title'] as String,
-      password: json['password'] as String);
+      password: json['password'] as String,
+      status: json['status'] as int);
 }
 
 Map<String, dynamic> _$PsItemToJson(PsItem instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'password': instance.password
+      'password': instance.password,
+      'status': instance.status
     };
 
 PsData _$PsDataFromJson(Map<String, dynamic> json) {

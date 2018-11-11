@@ -103,6 +103,13 @@ class GState extends Model {
   // 删除某个密码
   void delPsItem({int index}) {
     _data.list.removeAt(index);
+    notifyListeners();
+  }
+
+  // 改变状态
+  void starItem({int index,int status}) {
+    data.list[index].status = status;
+    notifyListeners();
   }
 
   static GState of(BuildContext context){

@@ -7,7 +7,8 @@ class PsItem {
 	String id;
 	String title;
 	String password;
-	PsItem({this.id, this.title, this.password});
+	int status; // 记录本条密码的状态。 0:普通 1：重要
+	PsItem({this.id, this.title, this.password, int status}):this.status = status == null ? 0 : status;
 	factory PsItem.fromJson(Map<String, dynamic> json) => _$PsItemFromJson(json);
 	Map<String, dynamic> toJson() => _$PsItemToJson(this);
 }
