@@ -67,7 +67,7 @@ class HomeState extends State<Home> {
   }
 
   obscurePassword(String password) {
-    String frontStr = password.substring(0, 2);
+    String frontStr = password.isNotEmpty ? password.substring(0, 2) : '';
     return '$frontStr********';
   }
 
