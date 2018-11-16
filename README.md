@@ -15,6 +15,8 @@
 
 1.0-基本的添加，浏览，编辑，删除，查询密码功能。
 
+[下载链接](https://github.com/Hades-li/flutter_password/blob/master/app-release.apk)
+
 
 ## demo
 
