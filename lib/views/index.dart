@@ -298,7 +298,9 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
       onTapStar: () {
         model.starItem(
            index: index,
-           status: item.status == 0 ? 1 : 0);
+           status: item.status == 0 ? 1 : 0,
+        );
+        print(item.status);
         model.savePsData().then((_) {});
       },
     ),

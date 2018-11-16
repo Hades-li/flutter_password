@@ -27,22 +27,23 @@ class PsCardState extends State<PsCard> with SingleTickerProviderStateMixin {
 	Animation<Color> _colorAnimation;
 	Animation<Color> _borderColorAnimation;
 	AnimationController _colorAnimationController;
-	PsItem item;
+//	PsItem item;
 
 	int get status {
-		if (item.status == 0) {
+//		print('${widget.item.title}:${widget.item.status}');
+		if (widget.item.status == 0) {
 				_colorAnimationController?.reverse();
 		} else {
 			_colorAnimationController?.forward();
 		}
-		return item.status;
+		return widget.item.status;
 	}
 
 	@override
   void initState() {
     // TODO: implement initState
     super.initState();
-    item = widget.item;
+//    item = widget.item;
     initAnimation();
 	}
 
@@ -58,7 +59,7 @@ class PsCardState extends State<PsCard> with SingleTickerProviderStateMixin {
 		   duration: Duration(milliseconds: 300), vsync: this);
 	  _colorAnimation = new ColorTween(begin: Color(0xffdbdbdb), end: Colors.orange,).animate(_colorAnimationController);
 	  _borderColorAnimation = new ColorTween(begin: Colors.blue, end: Colors.orange,).animate(_colorAnimationController);
-		print(item.status);
+		print(widget.item.status);
   }
 
   // 混淆密码
@@ -106,7 +107,7 @@ class PsCardState extends State<PsCard> with SingleTickerProviderStateMixin {
 								  crossAxisAlignment: CrossAxisAlignment.start,
 								  children: <Widget>[
 									  Text(
-										  item.title,
+										  widget.item.title,
 										  softWrap: true,
 										  overflow: TextOverflow.ellipsis,
 										  style: TextStyle(
@@ -115,7 +116,7 @@ class PsCardState extends State<PsCard> with SingleTickerProviderStateMixin {
 										  ),
 									  ),
 									  Text(
-										  obscurePassword(item.password),
+										  obscurePassword(widget.item.password),
 										  style: TextStyle(
 											  fontSize: 16.0,
 											  color: Color(0xffb6b6b6),
