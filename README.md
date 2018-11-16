@@ -12,4 +12,6 @@
 1.1-首页增加点击星星的颜色过渡动画。
 1.0-基本的添加，浏览，编辑，删除，查询密码功能。
 
+## demo
 
+![image](https://github.com/Hades-li/flutter_password/blob/master/demo.gif)
