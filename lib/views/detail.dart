@@ -3,6 +3,7 @@ import '../model/psData.dart';
 import 'package:uuid/uuid.dart';
 import '../store/index.dart';
 import '../route/index.dart';
+import '../utils/date_utils.dart';
 
 class VerificationMsg {
 	VerificationMsg({this.isSuccess = false, this.msg = ''});
@@ -37,7 +38,9 @@ class DetailState extends State<Detail> {
 
 	// 保存
 	void save(BuildContext context) {
+		item.modifyDate = new DateTime.now();
 		if (widget.isNew) {
+			item.createDate = item.modifyDate;
 			// 新建
 			state?.addPsItem(item);
 //      print(state.data.list);
@@ -49,7 +52,7 @@ class DetailState extends State<Detail> {
 			});
 		} else {
 			// 编辑
-			print(item.status);
+			print(item.createDate.toString());
 			state?.modifyPsItem(index: widget.index, item: item);
 			state?.savePsData()?.then((file) {
 				print('保存成功：${file.path}');
@@ -81,7 +84,8 @@ class DetailState extends State<Detail> {
 		isEditor = widget.isNew; // 初始化是否可编辑
 		if (widget.isNew) {
 			// 如果是新建，就创建一个新的临时变量
-			item = new PsItem(id: uuid.v1(), title: '', password: '');
+			DateTime dt = new DateTime.now();
+			item = new PsItem(id: uuid.v1(), title: '', password: '',createDate: dt,modifyDate: dt);
 		} else {
 			// 如果是编辑，就通过copy创建也给临时变量
 			int index = widget.index;
@@ -89,7 +93,9 @@ class DetailState extends State<Detail> {
 			String title = state.data.list[index].title;
 			String password = state.data.list[index].password;
 			int status = state.data.list[index].status;
-			item = new PsItem(id: id, title: title, password: password, status: status);
+			DateTime createDate = state.data.list[index].createDate;
+			DateTime modifyDate = state.data.list[index].modifyDate;
+			item = new PsItem(id: id, title: title, password: password, status: status, createDate: createDate, modifyDate: modifyDate);
 		}
 		setController();
 		super.initState();
@@ -158,7 +164,6 @@ class DetailState extends State<Detail> {
 	@override
 	Widget build(BuildContext context) {
 //    state = GState.of(context);
-
 		// TODO: implement build
 		return Scaffold(
 			appBar: AppBar(
@@ -203,91 +208,135 @@ class DetailState extends State<Detail> {
 					),
 				],
 			),
-			body: Center(
-				child: Column(
-					mainAxisAlignment: MainAxisAlignment.center,
-					children: <Widget>[
-						Padding(
-							padding: EdgeInsets.only(
-								bottom: 50.0,
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					Container(
+						margin: EdgeInsets.only(left: 10.0,right: 10.0),
+						padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
+						constraints: BoxConstraints(
+							minWidth: double.infinity,
+						),
+						decoration: BoxDecoration(
+							border: Border(
+								bottom: BorderSide(
+									color: Color(0xff8d989c),
+								)
+							)
+						),
+						child: Text(
+							item.modifyDate != null ? toDateTimeStringZH(datetime: item.modifyDate, formatString: 'yyyy年MM月dd日 hh:mm分') : '',
+							style: TextStyle(
+								fontSize: 14.0,
+								height: 1.2,
+								color: Color(0xff8d989c),
 							),
-							child: Row(
-								crossAxisAlignment: CrossAxisAlignment.start,
+						),
+					),
+					Expanded(
+						child: Center(
+							child: Column(
 								mainAxisAlignment: MainAxisAlignment.center,
 								children: <Widget>[
 									Padding(
-										padding:
-										EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-										child: Icon(
-											Icons.edit,
-											color:
-											isEditor == true ? Colors.blue : Colors.transparent,
+										padding: EdgeInsets.only(
+											bottom: 40.0,
 										),
-									),
-									Container(
-										width: 200.0,
-										child: TextField(
-											enabled: isEditor,
-											controller: _textController,
-											obscureText: !canShow,
-											style: TextStyle(
-												fontSize: 16.0,
-												height: 1,
-												color: Color(0xff333333),
-											),
-											decoration: InputDecoration(
-												errorText: verPassword.msg.isNotEmpty
-													 ? verPassword.msg
-													 : null,
-												hintStyle: TextStyle(color: Colors.cyan),
-												border: isEditor ? UnderlineInputBorder() : InputBorder
-													 .none,
-												/*errorBorder: UnderlineInputBorder(
+										child: Row(
+											crossAxisAlignment: CrossAxisAlignment.start,
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Padding(
+													padding:
+													EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+													child: Icon(
+														Icons.edit,
+														color:
+														isEditor == true ? Colors.blue : Colors.transparent,
+													),
+												),
+												Container(
+													width: 200.0,
+													child: TextField(
+														enabled: isEditor,
+														controller: _textController,
+														obscureText: !canShow,
+														style: TextStyle(
+															fontSize: 16.0,
+															height: 1,
+															color: Color(0xff333333),
+														),
+														decoration: InputDecoration(
+															errorText: verPassword.msg.isNotEmpty
+																 ? verPassword.msg
+																 : null,
+															hintStyle: TextStyle(color: Colors.cyan),
+															border: isEditor ? UnderlineInputBorder() : InputBorder
+																 .none,
+															/*errorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.red,
                           )
                         ),*/
-												/*enabledBorder: isEditor
+															/*enabledBorder: isEditor
                             ? UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.black26,
                                 ),
                               )
                             : InputBorder.none,*/
-												/*focusedBorder: UnderlineInputBorder(
+															/*focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blue,
                           ),
                         ),*/
-												contentPadding: EdgeInsets.all(10.0),
-											),
-											/*onChanged: (String val) {
+															contentPadding: EdgeInsets.all(10.0),
+														),
+														/*onChanged: (String val) {
                         item.password = val;
                       },*/
+													),
+												),
+											],
+										),
+									),
+									GestureDetector(
+										onTapDown: (TapDownDetails details) {
+											setState(() {
+												canShow = true;
+											});
+										},
+										onTapUp: (_) {
+											setState(() {
+												canShow = false;
+											});
+										},
+										child: Icon(
+											canShow == true ? Icons.visibility : Icons.visibility_off,
+											color: canShow == true ? Colors.blue : Color(0xff999999),
+											size: 70.0,
 										),
 									),
 								],
 							),
 						),
-						GestureDetector(
-							onTapDown: (TapDownDetails details) {
-								setState(() {
-									canShow = true;
-								});
-							},
-							onTapUp: (_) {
-								setState(() {
-									canShow = false;
-								});
-							},
-							child: Icon(
-								canShow == true ? Icons.visibility : Icons.visibility_off,
-								color: canShow == true ? Colors.blue : Color(0xff999999),
-								size: 70.0,
+					),
+					Container(
+						padding: EdgeInsets.all(10.0),
+						constraints: BoxConstraints(
+							minWidth: double.infinity,
+						),
+						child: Text(
+							'创建时间：${item.createDate != null ? toDateTimeStringZH(datetime: item.createDate, formatString: 'yyyy年MM月dd日 hh:mm分') : ''}',
+							textAlign: TextAlign.right,
+							style: TextStyle(
+								fontSize: 12.0,
+								height: 1.2,
+								color: Color(0xffb6b6b6),
 							),
 						),
-					],
-				),
+					)
+				],
 			),
 		);
 	}

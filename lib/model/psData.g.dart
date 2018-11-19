@@ -11,14 +11,18 @@ PsItem _$PsItemFromJson(Map<String, dynamic> json) {
       id: json['id'] as String,
       title: json['title'] as String,
       password: json['password'] as String,
-      status: json['status'] as int);
+      status: json['status'] as int,
+      createDate: DateTime.parse(json['createDate'] as String),
+      modifyDate: DateTime.parse(json['modifyDate'] as String));
 }
 
 Map<String, dynamic> _$PsItemToJson(PsItem instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'password': instance.password,
-      'status': instance.status
+      'status': instance.status,
+      'createDate': instance.createDate.toIso8601String(),
+      'modifyDate': instance.modifyDate.toIso8601String()
     };
 
 PsData _$PsDataFromJson(Map<String, dynamic> json) {

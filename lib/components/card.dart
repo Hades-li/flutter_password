@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/psData.dart';
+import '../utils/date_utils.dart';
 
 class PsCard extends StatefulWidget {
 	PsCard({
@@ -118,12 +119,23 @@ class PsCardState extends State<PsCard> with SingleTickerProviderStateMixin {
 									  Text(
 										  obscurePassword(widget.item.password),
 										  style: TextStyle(
-											  fontSize: 16.0,
-											  color: Color(0xffb6b6b6),
+											  fontSize: 12.0,
+											  height: 1.4,
+											  textBaseline: TextBaseline.alphabetic,
+											  color: Color(0xff999999),
 										  ),
 										  softWrap: false,
 										  overflow: TextOverflow.ellipsis,
 									  ),
+									  Text(
+										  toDateTimeStringZH(datetime: widget.item.modifyDate, formatString: 'yyyy年MM月dd日 hh:mm分'),
+										  style: TextStyle(
+											  fontSize: 12.0,
+											  height: 1.2,
+											  color: Color(0xffb6b6b6),
+										  ),
+
+									  )
 								  ],
 							  ),
 						  ),
