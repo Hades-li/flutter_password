@@ -208,135 +208,137 @@ class DetailState extends State<Detail> {
 					),
 				],
 			),
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: <Widget>[
-					Container(
-						margin: EdgeInsets.only(left: 10.0,right: 10.0),
-						padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
-						constraints: BoxConstraints(
-							minWidth: double.infinity,
-						),
-						decoration: BoxDecoration(
-							border: Border(
-								bottom: BorderSide(
-									color: Color(0xff8d989c),
-								)
-							)
-						),
-						child: Text(
-							item.modifyDate != null ? toDateTimeStringZH(datetime: item.modifyDate, formatString: 'yyyy年MM月dd日 hh:mm分') : '',
-							style: TextStyle(
-								fontSize: 14.0,
-								height: 1.2,
-								color: Color(0xff8d989c),
-							),
-						),
-					),
-					Expanded(
-						child: Center(
-							child: Column(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: <Widget>[
-									Padding(
-										padding: EdgeInsets.only(
-											bottom: 40.0,
-										),
-										child: Row(
-											crossAxisAlignment: CrossAxisAlignment.start,
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Padding(
-													padding:
-													EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-													child: Icon(
-														Icons.edit,
-														color:
-														isEditor == true ? Colors.blue : Colors.transparent,
-													),
-												),
-												Container(
-													width: 200.0,
-													child: TextField(
-														enabled: isEditor,
-														controller: _textController,
-														obscureText: !canShow,
-														style: TextStyle(
-															fontSize: 16.0,
-															height: 1,
-															color: Color(0xff333333),
-														),
-														decoration: InputDecoration(
-															errorText: verPassword.msg.isNotEmpty
-																 ? verPassword.msg
-																 : null,
-															hintStyle: TextStyle(color: Colors.cyan),
-															border: isEditor ? UnderlineInputBorder() : InputBorder
-																 .none,
-															/*errorBorder: UnderlineInputBorder(
+			body: SafeArea(
+				 child: Column(
+					 crossAxisAlignment: CrossAxisAlignment.start,
+					 children: <Widget>[
+						 Container(
+							 margin: EdgeInsets.only(left: 10.0,right: 10.0),
+							 padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
+							 constraints: BoxConstraints(
+								 minWidth: double.infinity,
+							 ),
+							 decoration: BoxDecoration(
+								  border: Border(
+										 bottom: BorderSide(
+											 color: Color(0xff8d989c),
+										 )
+								  )
+							 ),
+							 child: Text(
+								 item.modifyDate != null ? toDateTimeStringZH(datetime: item.modifyDate, formatString: 'yyyy年MM月dd日 hh:mm分') : '',
+								 style: TextStyle(
+									 fontSize: 14.0,
+									 height: 1.2,
+									 color: Color(0xff8d989c),
+								 ),
+							 ),
+						 ),
+						 Expanded(
+							 child: Center(
+								 child: Column(
+									 mainAxisAlignment: MainAxisAlignment.center,
+									 children: <Widget>[
+										 Padding(
+											 padding: EdgeInsets.only(
+												 bottom: 40.0,
+											 ),
+											 child: Row(
+												 crossAxisAlignment: CrossAxisAlignment.start,
+												 mainAxisAlignment: MainAxisAlignment.center,
+												 children: <Widget>[
+													 Padding(
+														 padding:
+														 EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+														 child: Icon(
+															 Icons.edit,
+															 color:
+															 isEditor == true ? Colors.blue : Colors.transparent,
+														 ),
+													 ),
+													 Container(
+														 width: 200.0,
+														 child: TextField(
+															 enabled: isEditor,
+															 controller: _textController,
+															 obscureText: !canShow,
+															 style: TextStyle(
+																 fontSize: 16.0,
+																 height: 1,
+																 color: Color(0xff333333),
+															 ),
+															 decoration: InputDecoration(
+																 errorText: verPassword.msg.isNotEmpty
+																	  ? verPassword.msg
+																	  : null,
+																 hintStyle: TextStyle(color: Colors.cyan),
+																 border: isEditor ? UnderlineInputBorder() : InputBorder
+																	  .none,
+																 /*errorBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.red,
                           )
                         ),*/
-															/*enabledBorder: isEditor
+																 /*enabledBorder: isEditor
                             ? UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.black26,
                                 ),
                               )
                             : InputBorder.none,*/
-															/*focusedBorder: UnderlineInputBorder(
+																 /*focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blue,
                           ),
                         ),*/
-															contentPadding: EdgeInsets.all(10.0),
-														),
-														/*onChanged: (String val) {
+																 contentPadding: EdgeInsets.all(10.0),
+															 ),
+															 /*onChanged: (String val) {
                         item.password = val;
                       },*/
-													),
-												),
-											],
-										),
-									),
-									GestureDetector(
-										onTapDown: (TapDownDetails details) {
-											setState(() {
-												canShow = true;
-											});
-										},
-										onTapUp: (_) {
-											setState(() {
-												canShow = false;
-											});
-										},
-										child: Icon(
-											canShow == true ? Icons.visibility : Icons.visibility_off,
-											color: canShow == true ? Colors.blue : Color(0xff999999),
-											size: 70.0,
-										),
-									),
-								],
-							),
-						),
-					),
-					Container(
-						padding: EdgeInsets.all(10.0),
-						constraints: BoxConstraints(
-							minWidth: double.infinity,
-						),
-						child: Text(
-							'创建时间：${item.createDate != null ? toDateTimeStringZH(datetime: item.createDate, formatString: 'yyyy年MM月dd日 hh:mm分') : ''}',
-							textAlign: TextAlign.right,
-							style: TextStyle(
-								fontSize: 12.0,
-								height: 1.2,
-								color: Color(0xffb6b6b6),
-							),
-						),
-					)
-				],
+														 ),
+													 ),
+												 ],
+											 ),
+										 ),
+										 GestureDetector(
+											 onTapDown: (TapDownDetails details) {
+												 setState(() {
+													 canShow = true;
+												 });
+											 },
+											 onTapUp: (_) {
+												 setState(() {
+													 canShow = false;
+												 });
+											 },
+											 child: Icon(
+												 canShow == true ? Icons.visibility : Icons.visibility_off,
+												 color: canShow == true ? Colors.blue : Color(0xff999999),
+												 size: 70.0,
+											 ),
+										 ),
+									 ],
+								 ),
+							 ),
+						 ),
+						 Container(
+							 padding: EdgeInsets.all(10.0),
+							 constraints: BoxConstraints(
+								 minWidth: double.infinity,
+							 ),
+							 child: Text(
+								 '创建时间：${item.createDate != null ? toDateTimeStringZH(datetime: item.createDate, formatString: 'yyyy年MM月dd日 hh:mm分') : ''}',
+								 textAlign: TextAlign.right,
+								 style: TextStyle(
+									 fontSize: 12.0,
+									 height: 1.2,
+									 color: Color(0xffb6b6b6),
+								 ),
+							 ),
+						 )
+					 ],
+				 ),
 			),
 		);
 	}

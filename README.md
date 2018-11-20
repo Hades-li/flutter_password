@@ -9,6 +9,8 @@
 2. 执行`flutter packages pub run build_runner build`构建json序列化模型(json_serializable);
 
 ## 更新说明
+1.2.2-调整了iphoneX下的界面显示问题
+
 1.2.0-新增日期显示
 
 1.1.2-修复可以保存空标题，空密码的bug
