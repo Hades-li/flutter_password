@@ -50,11 +50,13 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     _colorAnimationController = new AnimationController(
         duration: Duration(milliseconds: 300), vsync: this);
-    _colorAnimation = new ColorTween(begin: Color(0xffdbdbdb), end: Colors.orange,).animate(_colorAnimationController);
+    _colorAnimation = new ColorTween(
+      begin: Color(0xffdbdbdb),
+      end: Colors.orange,
+    ).animate(_colorAnimationController);
 //    Future.delayed(Duration(milliseconds: 2000), () {
-      _colorAnimationController.forward();
+    _colorAnimationController.forward();
 //    });
-
   }
 
 //  查询判断
@@ -237,74 +239,74 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   // 密码列表item
   _psItem(int index, PsItem item) => ScopedModelDescendant<GState>(
-    builder: (context, child, model) => PsCard(
-      item: item,
-      onTap: () {
-        Application.router.navigateTo(context, '/detail/$index',
-           transition: TransitionType.inFromRight);
-      },
-      onLongPress: () {
-        showModifyDialog<DialogAction>(
-          context: context,
-          child: SimpleDialog(
-            children: <Widget>[
-              SimpleDialogOption(
-                onPressed: () {
-                  model.delPsItem(index: index);
-                  model.savePsData();
-                  Navigator.pop(context, DialogAction.del);
-                },
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    new Icon(Icons.delete,
-                       size: 36.0, color: Colors.red),
-                    new Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: new Text('删除',
-                         style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                ),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Application.router.navigateTo(
-                     context, '/detail/$index',
-                     transition: TransitionType.inFromRight);
-                },
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    new Icon(Icons.edit,
-                       size: 36.0, color: Colors.blue),
-                    new Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: new Text(
-                        '编辑',
-                        style: TextStyle(color: Colors.blue),
+        builder: (context, child, model) => PsCard(
+              item: item,
+              onTap: () {
+                Application.router.navigateTo(context, '/detail/$index',
+                    transition: TransitionType.inFromRight);
+              },
+              onLongPress: () {
+                showModifyDialog<DialogAction>(
+                  context: context,
+                  child: SimpleDialog(
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () {
+                          model.delPsItem(index: index);
+                          model.savePsData();
+                          Navigator.pop(context, DialogAction.del);
+                        },
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            new Icon(Icons.delete,
+                                size: 36.0, color: Colors.red),
+                            new Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: new Text('删除',
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      onTapStar: () {
-        model.starItem(
-           index: index,
-           status: item.status == 0 ? 1 : 0,
-        );
-        print(item.status);
-        model.savePsData().then((_) {});
-      },
-    ),
-  );
+                      SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Application.router.navigateTo(
+                              context, '/detail/$index',
+                              transition: TransitionType.inFromRight);
+                        },
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            new Icon(Icons.edit,
+                                size: 36.0, color: Colors.blue),
+                            new Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: new Text(
+                                '编辑',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              onTapStar: () {
+                model.starItem(
+                  index: index,
+                  status: item.status == 0 ? 1 : 0,
+                );
+                print(item.status);
+                model.savePsData().then((_) {});
+              },
+            ),
+      );
 
   /*_psItem(int index, PsItem item) => ScopedModelDescendant<GState>(
         builder: (context, child, model) => GestureDetector(
@@ -442,20 +444,43 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         builder: (context, child, model) => Container(
               padding: EdgeInsets.only(top: 10.0),
               color: Color(0xfff9f9f9),
-              child: ListView.builder(
+              child: model.data.list.length > 0
+                  ? ListView.builder(
 //          padding: EdgeInsets.only(top:20.0,bottom: 20.0,),
-                itemCount: model.data.list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  PsItem item = model.data.list[index];
-                  if (filter(item)) {
-                    return _psItem(index, item);
-                  } else {
-                    return Offstage(
-                      offstage: true,
-                    );
-                  }
-                },
-              ),
+                      itemCount: model.data.list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        PsItem item = model.data.list[index];
+                        if (filter(item)) {
+                          return _psItem(index, item);
+                        } else {
+                          return Offstage(
+                            offstage: true,
+                          );
+                        }
+                      },
+                    )
+                  : Center(
+                      child: Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              'assets/imgs/nothing/nothing.png',
+                              width: 100.0,
+                              height: 100.0,
+                              fit: BoxFit.contain,
+                            ),
+                            Text(
+                              '还没有数据哦~!',
+                              style: TextStyle(
+                                fontSize: 16.0
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
             ),
       );
 }
