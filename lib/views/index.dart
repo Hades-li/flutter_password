@@ -7,11 +7,6 @@ import '../model/psData.dart';
 import '../store/index.dart';
 import '../components/card.dart';
 
-enum DialogAction {
-  del,
-  editor,
-}
-
 class PopVal {
   static DialogAction dialogAction;
   static int index = 0;
@@ -29,8 +24,6 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String keyStr = '';
 
   // 定义一个动画控制器
-  Animation<Color> _colorAnimation;
-  AnimationController _colorAnimationController;
 
   int get starCount {
     PsData data = GState.of(context).data;
@@ -43,20 +36,13 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return count;
   }
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     print('首页进入');
     super.initState();
-    _colorAnimationController = new AnimationController(
-        duration: Duration(milliseconds: 300), vsync: this);
-    _colorAnimation = new ColorTween(
-      begin: Color(0xffdbdbdb),
-      end: Colors.orange,
-    ).animate(_colorAnimationController);
-//    Future.delayed(Duration(milliseconds: 2000), () {
-    _colorAnimationController.forward();
-//    });
   }
 
 //  查询判断
@@ -83,21 +69,9 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return '$frontStr********';
   }
 
-//  弹窗
-  void showModifyDialog<T>({BuildContext context, Widget child}) {
-    showDialog<T>(
-      context: context,
-      builder: (BuildContext context) => child,
-    ).then<void>((T value) {
-      // The value passed to Navigator.pop() or null.
-      if (value != null) {}
-    });
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
-    _colorAnimationController.dispose();
     super.dispose();
   }
 
@@ -239,73 +213,31 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   // 密码列表item
   _psItem(int index, PsItem item) => ScopedModelDescendant<GState>(
-        builder: (context, child, model) => PsCard(
-              item: item,
-              onTap: () {
-                Application.router.navigateTo(context, '/detail/$index',
-                    transition: TransitionType.inFromRight);
-              },
-              onLongPress: () {
-                showModifyDialog<DialogAction>(
-                  context: context,
-                  child: SimpleDialog(
-                    children: <Widget>[
-                      SimpleDialogOption(
-                        onPressed: () {
-                          model.delPsItem(index: index);
-                          model.savePsData();
-                          Navigator.pop(context, DialogAction.del);
-                        },
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            new Icon(Icons.delete,
-                                size: 36.0, color: Colors.red),
-                            new Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: new Text('删除',
-                                  style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Application.router.navigateTo(
-                              context, '/detail/$index',
-                              transition: TransitionType.inFromRight);
-                        },
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            new Icon(Icons.edit,
-                                size: 36.0, color: Colors.blue),
-                            new Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: new Text(
-                                '编辑',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              onTapStar: () {
-                model.starItem(
-                  index: index,
-                  status: item.status == 0 ? 1 : 0,
-                );
-                print(item.status);
-                model.savePsData().then((_) {});
-              },
-            ),
+        builder: (context, child, model) {
+//          print('父目录中build');
+          final card = PsCard(
+            index: index,
+            item: item,
+            onTap: () {
+              Application.router.navigateTo(context, '/detail/$index',
+                 transition: TransitionType.inFromRight);
+            },
+            onLongPress: () {
+
+            },
+            onTapStar: () {
+              model.starItem(
+                index: index,
+                status: item.status == 0 ? 1 : 0,
+              );
+              print(item.status);
+              model.savePsData().then((_) {});
+            },
+          );
+
+
+          return card;
+        },
       );
 
   /*_psItem(int index, PsItem item) => ScopedModelDescendant<GState>(

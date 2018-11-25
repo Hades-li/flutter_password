@@ -163,7 +163,7 @@ class DetailState extends State<Detail> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('渲染');
+		print('详情build');
 //    state = GState.of(context);
 		// TODO: implement build
 		return Scaffold(
