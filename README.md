@@ -23,7 +23,7 @@
 
 1.0-基本的添加，浏览，编辑，删除，查询密码功能。
 
-[下载链接](https://github.com/Hades-li/flutter_password/releases/download/1.2.3/app-release.apk)
+[下载链接](https://github.com/Hades-li/flutter_password/releases/download/1.2.4/app-release.apk)
 
 
 ## demo
