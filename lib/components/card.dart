@@ -146,8 +146,14 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     return _buildItem();
   }
 
-  Widget _buildItem() => GestureDetector(
-        onTap: widget.onTap,
+  Widget _buildItem() => InkWell(
+        splashColor: Colors.red,
+        highlightColor: Colors.blue,
+        onTap: () {
+          print('点击');
+          // widget.onTap();
+        
+        },
         onLongPress: () {
           showModifyDialog<DialogAction>(
             context: context,
@@ -208,6 +214,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
             );
           },
           child: Card(
+            // color: n,
             clipBehavior: Clip.hardEdge,
             margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
             child: AnimatedBuilder(
@@ -274,7 +281,6 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                               color: _colorAnimation.value,
                             ),
                             onPressed: () {
-//								  	_colorAnimationController.forward();
                               widget.onTapStar();
                             },
                           ),
