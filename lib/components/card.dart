@@ -176,7 +176,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                   onPressed: () {
                     Navigator.pop(context);
                     Application.router.navigateTo(
-                       context, '/detail/$widget.index',
+                       context, '/detail/${widget.index}',
                        transition: TransitionType.inFromRight);
                   },
                   child: new Row(
