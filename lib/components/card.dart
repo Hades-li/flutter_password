@@ -27,7 +27,7 @@ class PsCard extends StatefulWidget {
   final VoidCallback onLongPress;
   final VoidCallback onTapStar; // 点击星星
   final PsItem item;
-  final int index;// 索引
+  final int index; // 索引
 
   @override
   State<StatefulWidget> createState() => PsCardState();
@@ -86,14 +86,13 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
       end: Colors.orange,
     ).animate(_colorAnimationController);
 //		print(widget.item.status);
-
   }
 
-  initOpacityAnimation(){
+  initOpacityAnimation() {
     _opacityAnimationCtl = new AnimationController(
-       duration: Duration(milliseconds: 500), vsync: this);
+        duration: Duration(milliseconds: 500), vsync: this);
     _opacityAnimation =
-       new CurveTween(curve: Curves.easeIn).animate(_opacityAnimationCtl);
+        new CurveTween(curve: Curves.easeIn).animate(_opacityAnimationCtl);
     _opacityAnimation.addStatusListener((statue) {
       if (statue == AnimationStatus.completed) {
         // todo 播放动画完成
@@ -146,146 +145,165 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     return _buildItem();
   }
 
-  Widget _buildItem() => InkWell(
-        splashColor: Colors.red,
-        highlightColor: Colors.blue,
-        onTap: widget.onTap,
-        onLongPress: () {
-          showModifyDialog<DialogAction>(
-            context: context,
-            child: SimpleDialog(
-              children: <Widget>[
-                SimpleDialogOption(
-                  onPressed: () {
-                    playDelAnimation();
-                    Navigator.pop(context, DialogAction.del);
-                  },
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new Icon(Icons.delete,
-                         size: 36.0, color: Colors.red),
-                      new Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: new Text('删除',
-                           style: TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  ),
-                ),
-                SimpleDialogOption(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Application.router.navigateTo(
-                       context, '/detail/${widget.index}',
-                       transition: TransitionType.inFromRight);
-                  },
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new Icon(Icons.edit,
-                         size: 36.0, color: Colors.blue),
-                      new Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: new Text(
-                          '编辑',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        child: AnimatedBuilder(
-          animation: _opacityAnimationCtl,
-          builder: (BuildContext context, Widget child) {
-            return Opacity(
-              opacity: 1.0 - _opacityAnimation.value,
-              child: child,
-            );
+  Widget _buildTest() => Material(
+        child: InkWell(
+          splashColor: Colors.red,
+          highlightColor: Colors.yellow,
+          onTap: () {
+            print('点击');
           },
-          child: Card(
-            // color: n,
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-            child: AnimatedBuilder(
-              animation: _colorAnimationController,
-              builder: (BuildContext context, Widget child) {
-                return Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: _borderColorAnimation.value,
-                        width: 5.0,
-                      ),
+          onLongPress: () {
+            print('长安');
+          },
+          child: Container(
+            color: Colors.transparent,
+            height: 100.0,
+            alignment: Alignment.center,
+            child: Text('卧槽'),
+          ),
+        ),
+      );
+
+  Widget _buildItem() => Material(
+        child: InkWell(
+          splashColor: Colors.red,
+          highlightColor: Colors.blue,
+          onTap: widget.onTap,
+          onLongPress: () {
+            showModifyDialog<DialogAction>(
+              context: context,
+              child: SimpleDialog(
+                children: <Widget>[
+                  SimpleDialogOption(
+                    onPressed: () {
+                      playDelAnimation();
+                      Navigator.pop(context, DialogAction.del);
+                    },
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        new Icon(Icons.delete, size: 36.0, color: Colors.red),
+                        new Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: new Text('删除',
+                              style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 18.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SimpleDialogOption(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Application.router.navigateTo(
+                          context, '/detail/${widget.index}',
+                          transition: TransitionType.inFromRight);
+                    },
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Expanded(
-                          flex: 6,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                widget.item.title,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Color(0xff303030),
-                                ),
-                              ),
-                              Text(
-                                obscurePassword(widget.item.password),
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  height: 1.4,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  color: Color(0xff999999),
-                                ),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                toDateTimeStringZH(
-                                    datetime: widget.item.modifyDate,
-                                    formatString: 'yyyy年MM月dd日 hh:mm分'),
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  height: 1.2,
-                                  color: Color(0xffb6b6b6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.star,
-                              color: _colorAnimation.value,
-                            ),
-                            onPressed: () {
-                              widget.onTapStar();
-                            },
+                        new Icon(Icons.edit, size: 36.0, color: Colors.blue),
+                        new Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: new Text(
+                            '编辑',
+                            style: TextStyle(color: Colors.blue),
                           ),
                         ),
                       ],
                     ),
                   ),
-                );
-              },
+                ],
+              ),
+            );
+          },
+          child: AnimatedBuilder(
+            animation: _opacityAnimationCtl,
+            builder: (BuildContext context, Widget child) {
+              return Opacity(
+                opacity: 1.0 - _opacityAnimation.value,
+                child: child,
+              );
+            },
+            child: Card(
+              color: Colors.transparent,
+              clipBehavior: Clip.hardEdge,
+              margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+              child: AnimatedBuilder(
+                animation: _colorAnimationController,
+                builder: (BuildContext context, Widget child) {
+                  return Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: _borderColorAnimation.value,
+                          width: 5.0,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  widget.item.title,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Color(0xff303030),
+                                  ),
+                                ),
+                                Text(
+                                  obscurePassword(widget.item.password),
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    height: 1.4,
+                                    textBaseline: TextBaseline.alphabetic,
+                                    color: Color(0xff999999),
+                                  ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  toDateTimeStringZH(
+                                      datetime: widget.item.modifyDate,
+                                      formatString: 'yyyy年MM月dd日 hh:mm分'),
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    height: 1.2,
+                                    color: Color(0xffb6b6b6),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.star,
+                                color: _colorAnimation.value,
+                              ),
+                              onPressed: () {
+                                widget.onTapStar();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
