@@ -149,11 +149,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   Widget _buildItem() => InkWell(
         splashColor: Colors.red,
         highlightColor: Colors.blue,
-        onTap: () {
-          print('点击');
-          // widget.onTap();
-        
-        },
+        onTap: widget.onTap,
         onLongPress: () {
           showModifyDialog<DialogAction>(
             context: context,
