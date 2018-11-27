@@ -145,106 +145,90 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     return _buildItem();
   }
 
-  Widget _buildTest() => Material(
-        child: InkWell(
-          splashColor: Colors.red,
-          highlightColor: Colors.yellow,
-          onTap: () {
-            print('点击');
-          },
-          onLongPress: () {
-            print('长安');
-          },
-          child: Container(
-            color: Colors.transparent,
-            height: 100.0,
-            alignment: Alignment.center,
-            child: Text('卧槽'),
-          ),
-        ),
-      );
 
-  Widget _buildItem() => Material(
-        child: InkWell(
-          splashColor: Colors.red,
-          highlightColor: Colors.blue,
-          onTap: widget.onTap,
-          onLongPress: () {
-            showModifyDialog<DialogAction>(
-              context: context,
-              child: SimpleDialog(
-                children: <Widget>[
-                  SimpleDialogOption(
-                    onPressed: () {
-                      playDelAnimation();
-                      Navigator.pop(context, DialogAction.del);
-                    },
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        new Icon(Icons.delete, size: 36.0, color: Colors.red),
-                        new Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: new Text('删除',
-                              style: TextStyle(color: Colors.red)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SimpleDialogOption(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Application.router.navigateTo(
-                          context, '/detail/${widget.index}',
-                          transition: TransitionType.inFromRight);
-                    },
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        new Icon(Icons.edit, size: 36.0, color: Colors.blue),
-                        new Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: new Text(
-                            '编辑',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+  Widget _buildItem() => AnimatedBuilder(
+        animation: _opacityAnimationCtl,
+        builder: (BuildContext context, Widget child) {
+          return Opacity(
+            opacity: 1.0 - _opacityAnimation.value,
+            child: child,
+          );
+        },
+        child: Card(
+          clipBehavior: Clip.hardEdge,
+          margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
           child: AnimatedBuilder(
-            animation: _opacityAnimationCtl,
+            animation: _colorAnimationController,
             builder: (BuildContext context, Widget child) {
-              return Opacity(
-                opacity: 1.0 - _opacityAnimation.value,
-                child: child,
-              );
-            },
-            child: Card(
-              color: Colors.transparent,
-              clipBehavior: Clip.hardEdge,
-              margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-              child: AnimatedBuilder(
-                animation: _colorAnimationController,
-                builder: (BuildContext context, Widget child) {
-                  return Container(
-                    padding: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        left: BorderSide(
-                          color: _borderColorAnimation.value,
-                          width: 5.0,
-                        ),
-                      ),
+              return Container(
+                // color: Colors.white,
+                // padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: _borderColorAnimation.value,
+                      width: 5.0,
                     ),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.white,
+                  child: InkWell(
+                    onTap: widget.onTap,
+                    onLongPress: () {
+                      showModifyDialog<DialogAction>(
+                        context: context,
+                        child: SimpleDialog(
+                          children: <Widget>[
+                            SimpleDialogOption(
+                              onPressed: () {
+                                playDelAnimation();
+                                Navigator.pop(context, DialogAction.del);
+                              },
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  new Icon(Icons.delete,
+                                      size: 36.0, color: Colors.red),
+                                  new Padding(
+                                    padding: const EdgeInsets.only(left: 16.0),
+                                    child: new Text('删除',
+                                        style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Application.router.navigateTo(
+                                    context, '/detail/${widget.index}',
+                                    transition: TransitionType.inFromRight);
+                              },
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  new Icon(Icons.edit,
+                                      size: 36.0, color: Colors.blue),
+                                  new Padding(
+                                    padding: const EdgeInsets.only(left: 16.0),
+                                    child: new Text(
+                                      '编辑',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    // splashColor: Colors.blue,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 18.0),
+                      padding: EdgeInsets.only(left: 18.0,top: 10.0,bottom:10.0,right: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -301,10 +285,10 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       );
