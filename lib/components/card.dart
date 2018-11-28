@@ -5,6 +5,7 @@ import '../route/index.dart';
 import 'package:fluro/fluro.dart';
 import '../store/index.dart';
 
+// 弹窗点击输出的两个状态，删除和编辑
 enum DialogAction {
   del,
   editor,
