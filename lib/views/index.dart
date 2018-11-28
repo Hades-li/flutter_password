@@ -220,7 +220,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
             item: item,
             onTap: () {
               Application.router.navigateTo(context, '/detail/$index',
-                 transition: TransitionType.inFromRight);
+                 transition: TransitionType.nativeModal);
             },
             onLongPress: () {
 
