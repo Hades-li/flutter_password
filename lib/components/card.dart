@@ -40,8 +40,11 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   Animation<Color> _borderColorAnimation;
   AnimationController _colorAnimationController;
 
-  AnimationController _opacityAnimationCtl;
+  AnimationController _opacityAnimationCtl; // 透明动画
   Animation<double> _opacityAnimation;
+
+  Animation<double> _heightAnimation; //高度动画
+  AnimationController _delAnimationCtl; // 删除动画的控制器
 
   //
 //	PsItem item;
@@ -69,7 +72,8 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   void dispose() {
     // TODO: implement dispose
     _colorAnimationController.dispose();
-    _opacityAnimationCtl.dispose();
+    _delAnimationCtl.dispose();
+    // _opacityAnimationCtl.dispose();
     super.dispose();
   }
 
@@ -90,21 +94,57 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   }
 
   initOpacityAnimation() {
-    _opacityAnimationCtl = new AnimationController(
-        duration: Duration(milliseconds: 500), vsync: this);
-    _opacityAnimation =
-        new CurveTween(curve: Curves.easeIn).animate(_opacityAnimationCtl);
-    _opacityAnimation.addStatusListener((statue) {
+    _delAnimationCtl = new AnimationController(
+      duration: Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
+    _heightAnimation = new Tween(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(new CurvedAnimation(
+      parent: _delAnimationCtl.view,
+      curve: new Interval(
+        0.5,
+        1.0,
+        curve: Curves.ease,
+      ),
+    ));
+
+    _opacityAnimation = new Tween(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(new CurvedAnimation(
+      parent: _delAnimationCtl.view,
+      curve: new Interval(
+        0.0,
+        0.5,
+        curve: Curves.ease,
+      ),
+    ));
+
+    _heightAnimation.addStatusListener((statue) {
       if (statue == AnimationStatus.completed) {
         // todo 播放动画完成
         delItem(widget.index);
       }
     });
+
+    // _opacityAnimationCtl = new AnimationController(
+    //     duration: Duration(milliseconds: 500), vsync: this);
+    // _opacityAnimation = new CurveTween(curve: Curves.easeIn).animate(_opacityAnimationCtl);
+    // _opacityAnimation.addStatusListener((statue) {
+    //   if (statue == AnimationStatus.completed) {
+    //     // todo 播放动画完成
+    //     delItem(widget.index);
+    //   }
+    // });
   }
 
   // 播放删除动画
   playDelAnimation() {
-    _opacityAnimationCtl.forward();
+    // _opacityAnimationCtl.forward();
+    _delAnimationCtl.forward();
   }
 
   // 删除当前card
@@ -146,150 +186,155 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     return _buildItem();
   }
 
-
   Widget _buildItem() => AnimatedBuilder(
-        animation: _opacityAnimationCtl,
+        animation: _delAnimationCtl,
         builder: (BuildContext context, Widget child) {
           return Opacity(
-            opacity: 1.0 - _opacityAnimation.value,
+            opacity: _opacityAnimation.value,
             child: child,
           );
         },
-        child: Card(
-          clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-          child: AnimatedBuilder(
-            animation: _colorAnimationController,
-            builder: (BuildContext context, Widget child) {
-              return Container(
-                // color: Colors.white,
-                // padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                      color: _borderColorAnimation.value,
-                      width: 5.0,
+        child: SizeTransition(
+          sizeFactor: _heightAnimation,
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+            child: AnimatedBuilder(
+              animation: _colorAnimationController,
+              builder: (BuildContext context, Widget child) {
+                return Container(
+                  // color: Colors.white,
+                  // padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(
+                        color: _borderColorAnimation.value,
+                        width: 5.0,
+                      ),
                     ),
                   ),
-                ),
-                child: Material(
-                  color: Colors.white,
-                  child: InkWell(
-                    onTap: widget.onTap,
-                    onLongPress: () {
-                      showModifyDialog<DialogAction>(
-                        context: context,
-                        child: SimpleDialog(
+                  child: Material(
+                    color: Colors.white,
+                    child: InkWell(
+                      onTap: widget.onTap,
+                      onLongPress: () {
+                        showModifyDialog<DialogAction>(
+                          context: context,
+                          child: SimpleDialog(
+                            children: <Widget>[
+                              SimpleDialogOption(
+                                onPressed: () {
+                                  playDelAnimation();
+                                  Navigator.pop(context, DialogAction.del);
+                                },
+                                child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Icon(Icons.delete,
+                                        size: 36.0, color: Colors.red),
+                                    new Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 16.0),
+                                      child: new Text('删除',
+                                          style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SimpleDialogOption(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Application.router.navigateTo(
+                                      context, '/detail/${widget.index}',
+                                      transition: TransitionType.inFromRight);
+                                },
+                                child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Icon(Icons.edit,
+                                        size: 36.0, color: Colors.blue),
+                                    new Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 16.0),
+                                      child: new Text(
+                                        '编辑',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      // splashColor: Colors.blue,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 18.0, top: 10.0, bottom: 10.0, right: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            SimpleDialogOption(
-                              onPressed: () {
-                                playDelAnimation();
-                                Navigator.pop(context, DialogAction.del);
-                              },
-                              child: new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  new Icon(Icons.delete,
-                                      size: 36.0, color: Colors.red),
-                                  new Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: new Text('删除',
-                                        style: TextStyle(color: Colors.red)),
+                                  Text(
+                                    widget.item.title,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Color(0xff303030),
+                                    ),
                                   ),
+                                  Text(
+                                    obscurePassword(widget.item.password),
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      height: 1.4,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      color: Color(0xff999999),
+                                    ),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    toDateTimeStringZH(
+                                        datetime: widget.item.modifyDate,
+                                        formatString: 'yyyy年MM月dd日 hh:mm分'),
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      height: 1.2,
+                                      color: Color(0xffb6b6b6),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                            SimpleDialogOption(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Application.router.navigateTo(
-                                    context, '/detail/${widget.index}',
-                                    transition: TransitionType.inFromRight);
-                              },
-                              child: new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  new Icon(Icons.edit,
-                                      size: 36.0, color: Colors.blue),
-                                  new Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: new Text(
-                                      '编辑',
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
-                                ],
+                            Expanded(
+                              flex: 1,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.star,
+                                  color: _colorAnimation.value,
+                                ),
+                                onPressed: () {
+                                  widget.onTapStar();
+                                },
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                    // splashColor: Colors.blue,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 18.0,top: 10.0,bottom:10.0,right: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 6,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  widget.item.title,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Color(0xff303030),
-                                  ),
-                                ),
-                                Text(
-                                  obscurePassword(widget.item.password),
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    height: 1.4,
-                                    textBaseline: TextBaseline.alphabetic,
-                                    color: Color(0xff999999),
-                                  ),
-                                  softWrap: false,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  toDateTimeStringZH(
-                                      datetime: widget.item.modifyDate,
-                                      formatString: 'yyyy年MM月dd日 hh:mm分'),
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    height: 1.2,
-                                    color: Color(0xffb6b6b6),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.star,
-                                color: _colorAnimation.value,
-                              ),
-                              onPressed: () {
-                                widget.onTapStar();
-                              },
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       );

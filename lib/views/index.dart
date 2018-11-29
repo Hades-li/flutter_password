@@ -234,11 +234,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
               model.savePsData().then((_) {});
             },
           );
-
-
           return card;
         },
       );
+
 
   /*_psItem(int index, PsItem item) => ScopedModelDescendant<GState>(
         builder: (context, child, model) => GestureDetector(
@@ -384,6 +383,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         PsItem item = model.data.list[index];
                         if (filter(item)) {
                           return _psItem(index, item);
+                          // return Dismissible()
                         } else {
                           return Offstage(
                             offstage: true,
