@@ -40,7 +40,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   Animation<Color> _borderColorAnimation;
   AnimationController _colorAnimationController;
 
-  AnimationController _opacityAnimationCtl; // 透明动画
+  // AnimationController _opacityAnimationCtl; // 透明动画
   Animation<double> _opacityAnimation;
 
   Animation<double> _heightAnimation; //高度动画
@@ -95,7 +95,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
 
   initOpacityAnimation() {
     _delAnimationCtl = new AnimationController(
-      duration: Duration(milliseconds: 2000),
+      duration: Duration(milliseconds: 1000),
       vsync: this,
     );
 
@@ -107,7 +107,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
       curve: new Interval(
         0.5,
         1.0,
-        curve: Curves.ease,
+        curve: Curves.easeOut,
       ),
     ));
 
@@ -119,7 +119,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
       curve: new Interval(
         0.0,
         0.5,
-        curve: Curves.ease,
+        curve: Curves.linear,
       ),
     ));
 

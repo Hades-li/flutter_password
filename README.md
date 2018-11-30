@@ -9,6 +9,8 @@
 2. 执行`flutter packages pub run build_runner build`构建json序列化模型(json_serializable);
 
 ## 更新说明
+1.2.7-首页新增删除动画
+
 1.2.6-首页card增加点击水波纹效果。
 
 1.2.5-bug修复,少量ui调整
@@ -27,7 +29,7 @@
 
 1.0-基本的添加，浏览，编辑，删除，查询密码功能。
 
-[下载链接](https://github.com/Hades-li/flutter_password/releases/download/1.2.6/app-release.apk)
+[下载链接](https://github.com/Hades-li/flutter_password/releases/download/1.2.7/app-release.apk)
 
 
 ## demo

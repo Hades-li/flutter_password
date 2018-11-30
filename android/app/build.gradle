@@ -47,8 +47,8 @@ android {
         applicationId "com.plusli.flutterpassword"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 11
-        versionName '1.2.6'
+        versionCode 12
+        versionName '1.2.7'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
