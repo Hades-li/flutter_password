@@ -9,7 +9,7 @@ part of 'psData.dart';
 PsItem _$PsItemFromJson(Map<String, dynamic> json) {
   return PsItem(
       id: json['id'] as String,
-      accont: json['accont'] as String,
+      account: json['account'] as String,
       title: json['title'] as String,
       password: json['password'] as String,
       status: json['status'] as int,
@@ -20,7 +20,7 @@ PsItem _$PsItemFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PsItemToJson(PsItem instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'accont': instance.accont,
+      'account': instance.account,
       'password': instance.password,
       'status': instance.status,
       'createDate': instance.createDate.toIso8601String(),

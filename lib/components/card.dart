@@ -292,7 +292,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   Text(
-                                    obscurePassword(widget.item.password),
+                                    '${widget.item.account}(${obscurePassword(widget.item.password)})',
                                     style: TextStyle(
                                       fontSize: 12.0,
                                       height: 1.4,
