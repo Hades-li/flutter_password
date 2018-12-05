@@ -218,6 +218,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
           final card = PsCard(
             index: index,
             item: item,
+            duration: Duration(milliseconds: 1000),
             onTap: () {
               Application.router.navigateTo(context, '/detail/$index',
                  transition: TransitionType.nativeModal);

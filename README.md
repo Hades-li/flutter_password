@@ -9,6 +9,8 @@
 2. 执行`flutter packages pub run build_runner build`构建json序列化模型(json_serializable);
 
 ## 更新说明
+1.3.1-修复首页动画bug
+
 1.3.0-详情页大改版，增加记录账号功能
 
 1.2.7-首页新增删除动画

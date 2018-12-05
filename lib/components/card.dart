@@ -19,6 +19,7 @@ class PsCard extends StatefulWidget {
     this.onLongPress,
     this.onTapStar,
     @required this.index,
+    this.duration,
   }) : super(key: key) {
 //		print(item.status);
 //		_colorAnimationController = new AnimationController(duration: Duration(milliseconds: 300), vsync: this);
@@ -29,6 +30,7 @@ class PsCard extends StatefulWidget {
   final VoidCallback onTapStar; // 点击星星
   final PsItem item;
   final int index; // 索引
+  final Duration duration;
 
   @override
   State<StatefulWidget> createState() => PsCardState();
@@ -45,6 +47,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
 
   Animation<double> _heightAnimation; //高度动画
   AnimationController _delAnimationCtl; // 删除动画的控制器
+
 
   //
 //	PsItem item;
@@ -79,7 +82,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
 
   // 初始化动画
   void initColorAnimation() {
-    print('初始化动画:${widget.item.title}');
+    print('初始化color动画:${widget.item.title}');
     _colorAnimationController = new AnimationController(
         duration: Duration(milliseconds: 300), vsync: this);
     _colorAnimation = new ColorTween(
@@ -94,6 +97,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   }
 
   initOpacityAnimation() {
+    print('初始化删除动画:${widget.item.title}');
     _delAnimationCtl = new AnimationController(
       duration: Duration(milliseconds: 1000),
       vsync: this,
@@ -160,14 +164,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
     return '$frontStr********';
   }
 
-  @override
-  void didUpdateWidget(PsCard oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    initOpacityAnimation();
-  }
-
-  //  弹窗
+//  弹窗
   void showModifyDialog<T>({BuildContext context, Widget child}) {
     showDialog<T>(
       context: context,
@@ -176,6 +173,27 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
       // The value passed to Navigator.pop() or null.
       if (value != null) {}
     });
+  }
+
+  @override
+  void didUpdateWidget(PsCard oldWidget) {
+    // TODO: implement didUpdateWidget
+      // print('更新card的自身状态:$testIndex');
+
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.item.id != widget.item.id) {
+      // initOpacityAnimation();
+      _delAnimationCtl.reset();
+    }
+    if (oldWidget.item.status != widget.item.status) {
+      switch(widget.item.status){
+        case 0:
+        _colorAnimationController.reset();
+        break;
+        case 1:
+        _colorAnimationController.forward(from: 1.0);
+      }
+    }
   }
 
   @override
