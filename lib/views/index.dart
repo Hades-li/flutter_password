@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
   HomeState createState() => new HomeState();
 }
 
-class HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class HomeState extends State<Home> {
   String keyStr = '';
 
   // 定义一个动画控制器
@@ -101,9 +101,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ),
               borderRadius: BorderRadius.all(Radius.circular(16.0)),
             ),
-            hintText: '输入查询关键字',
+            hintText: 'search',
             hintStyle: TextStyle(
               color: Colors.cyan,
+              height: 1.0,
               fontSize: 16.0,
             ),
             contentPadding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),

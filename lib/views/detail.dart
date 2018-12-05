@@ -168,7 +168,7 @@ class DetailState extends State<Detail> {
       // 判断是否为空
       setState(() {
         verAccount?.isSuccess = false;
-        verAccount?.msg = '你也许会忘记账号';
+        verAccount?.msg = '你也许会忘记账号，记一下吧';
       });
       return false;
     } else if (str.indexOf('@') >= 0 &&
@@ -181,8 +181,8 @@ class DetailState extends State<Detail> {
       });
       return false;
     } else if (str.indexOf(new RegExp(r'^[0-9]*$')) >= 0 &&
-        str.indexOf(
-                new RegExp( r'^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$')) ==
+        str.indexOf(new RegExp(
+                r'^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$')) ==
             -1) {
       setState(() {
         verAccount?.isSuccess = false;
@@ -319,8 +319,7 @@ class DetailState extends State<Detail> {
                           labelStyle: TextStyle(
                             fontSize: 14.0,
                             height: 1.0,
-                            color:
-                                verAccount.isSuccess ? null : Colors.deepOrange,
+                            color: verAccount.isSuccess ? null : Colors.orange,
                           ),
                           hintText: '列如xxx@163.com',
                           hintStyle: TextStyle(
@@ -331,12 +330,12 @@ class DetailState extends State<Detail> {
                           errorText:
                               verAccount.msg.isNotEmpty ? verAccount.msg : null,
                           errorStyle: TextStyle(
-                            color: Colors.deepOrange,
+                            color: Colors.orange,
                           ),
                           border: OutlineInputBorder(),
                           errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                            color: Colors.deepOrange,
+                            color: Colors.orange,
                           )),
                           focusedErrorBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -357,7 +356,7 @@ class DetailState extends State<Detail> {
                         obscureText: !canShow,
                         style: TextStyle(
                           fontSize: 14.0,
-                          height: 1,
+                          height: 1.0,
                           color: Color(0xff333333),
                         ),
                         decoration: InputDecoration(
@@ -366,7 +365,11 @@ class DetailState extends State<Detail> {
                               fontSize: 14.0,
                             ),
                             hintText: '请填写密码',
-                            hintStyle: TextStyle(color: Colors.cyan),
+                            hintStyle: TextStyle(
+                              color: Colors.cyan,
+                              height: 1.0,
+                              fontSize: 14.0,
+                            ),
                             errorText: verPassword.msg.isNotEmpty
                                 ? verPassword.msg
                                 : null,
