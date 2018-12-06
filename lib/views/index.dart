@@ -85,6 +85,7 @@ class HomeState extends State<Home> {
         title: TextField(
           style: TextStyle(
             color: Colors.white,
+            height: 1.0,
             fontSize: 16.0,
           ),
           decoration: InputDecoration(
@@ -93,15 +94,15 @@ class HomeState extends State<Home> {
               borderSide: BorderSide(
                 color: Colors.white,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              borderRadius: BorderRadius.all(Radius.circular(17.0)),
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.white30,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              borderRadius: BorderRadius.all(Radius.circular(17.0)),
             ),
-            hintText: 'search',
+            hintText: '输入查询关键字',
             hintStyle: TextStyle(
               color: Colors.cyan,
               height: 1.0,
@@ -114,7 +115,7 @@ class HomeState extends State<Home> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add_circle),
-            iconSize: 35.0,
+            iconSize: 36.0,
             onPressed: () {
               Application.router.navigateTo(
                 context,
