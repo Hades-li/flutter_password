@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         model: gState,
         child: new MaterialApp(
           title: '密码簿',
+
           theme: new ThemeData(
               // This is the theme of your application.
               //
