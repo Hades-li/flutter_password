@@ -14,20 +14,16 @@ class DBPassword {
   Database database;
 
   // 初始化数据库
-  initDB() {
-    Io.localPath.then((path) async {
+  Future<bool> initDB() {
+     return Io.localPath.then((path) async {
       String fullPath = '$path/$DBName';
-      database = await openDatabase(fullPath, version: 1,
-          onCreate: (Database db, int version) async {
-            // When creating the db, create the table
-            await db.execute('''
-        CREATE TABLE PsData (
-          id TEXT PRIMARY KEY,
-          account TEXT,
-        )
-        ''');
-            await db.execute('''
-        CREATE TABLE PsItem (
+      try {
+        database = await openDatabase(fullPath, version: 1,
+            onCreate: (Database db, int version) async {
+          print('版本：$version');
+          // 建表
+          await db.execute('CREATE TABLE $PsDataTBName (id TEXT PRIMARY KEY,account TEXT)');
+          await db.execute("""CREATE TABLE $PsItemsTBName (
           dataId TEXT,
           id TEXT PRIMARY KEY,
           title TEXT,
@@ -35,10 +31,14 @@ class DBPassword {
           password TEXT,
           status INTEGER,
           createDate TEXT,
-          modifyDate TEXT,
-        )
-      ''');
-          });
+          modifyDate TEXT
+        )""");
+        });
+      } catch (e) {
+        print(e);
+      }
+      print("sql初始化结束");
+      return true;
     });
   }
 
@@ -47,7 +47,7 @@ class DBPassword {
     if (database != null) {
       List<Map<String, dynamic>> list = await database.query(PsDataTBName,
           columns: ['id', 'account'],
-          where: '"account" = ?',
+          where: 'account = ?',
           whereArgs: [account]);
       if (list.length > 0) {
         return list.first;
@@ -78,7 +78,14 @@ class DBPassword {
     return null;
   }
 
-
+  // 新增账户数据
+  Future<int> insertData(Map<String, dynamic> data) async {
+    if (database != null) {
+      int id = await database.insert(PsDataTBName, data);
+      return id;
+    }
+    return null;
+  }
 
   // 新增密码表
   Future<int> insertItem(Map<String, dynamic> item) async {
@@ -91,8 +98,14 @@ class DBPassword {
 
 //  删除密码表
   Future<int> delete(String id) async {
-    return await database.delete(PsItemsTBName, where: '"id" = ?', whereArgs: [id]);
+    if (database != null) {
+      return await database.delete(PsItemsTBName, where: 'id = ?', whereArgs: [id]);
+    }
+    return null;
   }
-
+  
+  // 更新
+  Future<int> update({String id, Map<String, dynamic> map}) {
+    return database.update(PsItemsTBName, map, where: 'id = ?',whereArgs: [id]);
+  }
 }
-

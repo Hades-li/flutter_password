@@ -44,24 +44,27 @@ class DetailState extends State<Detail> {
     if (widget.isNew) {
       item.createDate = item.modifyDate;
       // 新建
-      state?.addPsItem(item);
-//      print(state.data.list);
-      state?.savePsData()?.then((file) {
-        print('保存成功：${file.path}');
+      state?.addPsItem(item)?.then((_) {
         Application.router.pop(context);
+      });
+//      print(state.data.list);
+      /*state?.savePsData()?.then((file) {
+        print('保存成功：${file.path}');
       })?.catchError((error) {
         print('保存失败：$error');
-      });
+      });*/
     } else {
       // 编辑
       print(item.createDate.toString());
-      state?.modifyPsItem(index: widget.index, item: item);
-      state?.savePsData()?.then((file) {
+      state?.modifyPsItem(index: widget.index, item: item)?.then((_) {
+        Application.router.pop(context);
+      });
+      /*state?.savePsData()?.then((file) {
         print('保存成功：${file.path}');
         Application.router.pop(context);
       })?.catchError((error) {
         print('保存失败：$error');
-      });
+      });*/
     }
   }
 
@@ -73,7 +76,8 @@ class DetailState extends State<Detail> {
       });
     } else if (isEditor == true &&
         verificationPassword(item.password) &&
-        verificationTitle(item.title)) {
+        verificationTitle(item.title)
+    ) {
       isEditor = false;
       save(context);
     }

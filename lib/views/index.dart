@@ -234,7 +234,7 @@ class HomeState extends State<Home> {
                 status: item.status == 0 ? 1 : 0,
               );
               print(item.status);
-              model.savePsData().then((_) {});
+//              model.savePsData().then((_) {});
             },
           );
           return card;

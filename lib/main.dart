@@ -17,11 +17,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final GState gState = new GState();
+  final gState = GState();
 
+  // 初始化
+  onCreated() {
+
+  }
   Router createRouter() {
     Application.router = new Router();
     Routes.configureRoutes(Application.router);
+    onCreated();
     return Application.router;
   }
 

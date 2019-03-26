@@ -155,7 +155,7 @@ class PsCardState extends State<PsCard> with TickerProviderStateMixin {
   delItem(index) {
     GState model = GState.of(context);
     model.delPsItem(index: index);
-    model.savePsData();
+//    model.savePsData();
   }
 
   // 混淆密码
