@@ -6,10 +6,6 @@ const DBName = 'data.db';
 const PsDataTBName = 'PsData'; // Data表名称
 const PsItemsTBName = 'PsItems'; // Item表名称
 
-class PsDataHelper {}
-
-class PsItemHelper {}
-
 class DBPassword {
   Database database;
 
