@@ -23,9 +23,10 @@ class MyApp extends StatelessWidget {
   onCreated() {
 
   }
-  Router createRouter() {
-    Application.router = new Router();
-    Routes.configureRoutes(Application.router);
+  FluroRouter createRouter() {
+    final router = FluroRouter();
+    Routes.configureRoutes(router);
+    Application.router = router;
     onCreated();
     return Application.router;
   }

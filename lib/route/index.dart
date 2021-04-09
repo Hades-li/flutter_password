@@ -4,14 +4,14 @@ import '../views/detail.dart';
 import '../views/index.dart';
 
 class Application {
-  static Router router;
+  static FluroRouter router;
 }
 
 class Routes {
   static String home = '/';
   static String detail = '/detail/:index';
 
-  static void configureRoutes(Router router) {
+  static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new Home(title: '首页');
