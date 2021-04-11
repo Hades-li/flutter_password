@@ -9,6 +9,8 @@
 2. 执行`flutter packages pub run build_runner build`构建json序列化模型(json_serializable);
 
 ## 更新说明
+1.5.0-flutter版本更新至2.0.3正式版+更新所有插件
+
 1.4.0-flutter版本更新至1.2正式版，本地存储由文本文件改为sqlite数据库。
 
 1.3.2-flutter版本更新至1.0。

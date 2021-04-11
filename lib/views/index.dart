@@ -198,7 +198,7 @@ class HomeState extends State<Home> {
                             children: [
                               TextSpan(text: '重要的'),
                               TextSpan(text: '$starCount个'),
-                              TextSpan(text: '，普通的'),
+                              TextSpan(text: '，一般的'),
                               TextSpan(
                                 text: '${model.data.list.length - starCount}个',
                               ),
